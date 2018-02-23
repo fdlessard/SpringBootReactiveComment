@@ -18,11 +18,12 @@ public class CustomerController {
 /*    @PostMapping("/customer")
     public Mono<Void> create(@RequestBody Publisher<Customer> customerPublisher) {
 
-    }
+    }*/
 
     @GetMapping("/customer")
     public Flux<Customer> list() {
-    }*/
+        return Flux.just(buildCustomer(0), buildCustomer(1) ,buildCustomer(2));
+    }
 
     @GetMapping("/customer/{id}")
     public Mono<Customer> findById(@PathVariable String id) {
