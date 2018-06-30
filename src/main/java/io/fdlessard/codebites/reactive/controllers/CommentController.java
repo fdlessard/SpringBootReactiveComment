@@ -55,7 +55,7 @@ public class CommentController {
 
     private List<Integer> buildIds() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 1; i <= 500; i++) {
+        for (int i = 1; i <= 100; i++) {
             ids.add(i);
         }
 
