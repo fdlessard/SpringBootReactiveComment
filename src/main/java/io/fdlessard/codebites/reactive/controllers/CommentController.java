@@ -25,8 +25,9 @@ public class CommentController {
     public Flux<Comment> getAllComments() {
 
         WebClient webClient = getWebClient();
+        List<Integer> ids = buildIds();
 
-        List<Mono<Comment>> monos = buildIds().stream()
+        List<Mono<Comment>> monos = ids.stream()
                 .map(id -> webClient.get()
                         .uri("/comments/{id}", id)
                         .accept(MediaType.APPLICATION_JSON)
