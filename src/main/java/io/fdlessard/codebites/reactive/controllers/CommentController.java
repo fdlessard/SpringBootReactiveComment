@@ -3,6 +3,7 @@ package io.fdlessard.codebites.reactive.controllers;
 import io.fdlessard.codebites.reactive.domain.Comment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
@@ -18,13 +19,18 @@ import java.util.stream.Collectors;
 @RestController
 public class CommentController {
 
-    public CommentController() {
+    private ClientHttpConnector clientHttpConnector;
+
+    private WebClient webClient;
+
+    public CommentController(ClientHttpConnector clientHttpConnector) {
+        webClient = buildWebClient(clientHttpConnector);
     }
+
 
     @GetMapping("/comments")
     public Flux<Comment> getAllComments() {
 
-        WebClient webClient = getWebClient();
         List<Integer> ids = buildIds();
 
         List<Mono<Comment>> monos = ids.stream()
@@ -35,12 +41,13 @@ public class CommentController {
                         .bodyToMono(Comment.class))
                 .collect(Collectors.toList());
 
-        return Flux.concat(monos);
+        return Flux.merge(monos);
     }
 
-    private WebClient getWebClient() {
+    private WebClient buildWebClient(ClientHttpConnector clientHttpConnector) {
         return WebClient.builder()
                 .baseUrl("http://jsonplaceholder.typicode.com")
+                .clientConnector(clientHttpConnector)
                 .filter(logRequest())
                 .build();
     }
@@ -56,7 +63,7 @@ public class CommentController {
 
     private List<Integer> buildIds() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 150; i++) {
             ids.add(i);
         }
 
