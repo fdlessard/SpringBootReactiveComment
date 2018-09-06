@@ -1,6 +1,5 @@
 server.port: 8090
 
-
 connection:
   soTimeout: 3000
   connectionTimout: 3000
