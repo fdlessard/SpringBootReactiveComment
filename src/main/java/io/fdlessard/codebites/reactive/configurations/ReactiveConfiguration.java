@@ -1,6 +1,5 @@
 package io.fdlessard.codebites.reactive.configurations;
 
-import io.fdlessard.codebites.reactive.configurations.ConnectionProperties;
 import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,9 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.ipc.netty.resources.PoolResources;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -23,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 public class ReactiveConfiguration {
 
     public static final String COMMENT_BASE_URL = "http://jsonplaceholder.typicode.com/comments";
-    public static final int MAX_COMMENT = 275;
+    public static final int MAX_COMMENT = 500;
 
     @Autowired
     private ConnectionProperties connectionProperties;
@@ -31,11 +30,13 @@ public class ReactiveConfiguration {
     @Bean
     public ClientHttpConnector clientHttpConnector() {
 
-        return new ReactorClientHttpConnector(options -> {
+/*        return new ReactorClientHttpConnector(options -> {
             options.option(ChannelOption.SO_TIMEOUT, connectionProperties.getSoTimeout());
             options.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionProperties.getConnectTimeout());
             options.poolResources(PoolResources.fixed("myPool", connectionProperties.getMaxPoolSize()));
-        });
+        });*/
+
+        return new ReactorClientHttpConnector();
     }
 
     @Bean
@@ -61,9 +62,10 @@ public class ReactiveConfiguration {
         };
     }
 
-    public static List<Integer> buildIds() {
+    public static List<String> buildIds() {
 
         return IntStream.range(1,MAX_COMMENT).boxed()
+                .map(Objects::toString)
                 .collect(toList());
     }
 }

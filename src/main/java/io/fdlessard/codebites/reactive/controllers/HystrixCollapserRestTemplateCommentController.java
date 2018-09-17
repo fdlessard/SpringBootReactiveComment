@@ -32,7 +32,7 @@ public class HystrixCollapserRestTemplateCommentController {
     @GetMapping(value = "/hystrixcollapser/resttemplate/comments")
     public List<Comment> getAllComments() throws Exception {
 
-        List<Integer> ids = buildIds();
+        List<String> ids = buildIds();
         List<Future<Comment>> futures = new ArrayList<>();
 
         HystrixRequestContext context = HystrixRequestContext.initializeContext();

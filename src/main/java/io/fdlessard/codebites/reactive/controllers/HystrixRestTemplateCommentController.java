@@ -36,7 +36,7 @@ public class HystrixRestTemplateCommentController {
     @GetMapping(value = "/hystrix/resttemplate/comments")
     public Observable<Comment> getAllComments() {
 
-        List<Integer> ids = buildIds();
+        List<String> ids = buildIds();
         List<Observable<Comment>> observables = new ArrayList<>();
 
         for (int i = 0; i < ids.size(); i++) {

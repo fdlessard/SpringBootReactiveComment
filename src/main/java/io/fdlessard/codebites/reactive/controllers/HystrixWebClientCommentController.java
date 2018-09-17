@@ -36,7 +36,7 @@ public class HystrixWebClientCommentController {
     @GetMapping(value = "/hystrix/webclient/comments")
     public Observable<Comment> getAllComments() {
 
-        List<Integer> ids = buildIds();
+        List<String> ids = buildIds();
         List<Observable<Comment>> observables = new ArrayList<>();
 
         for (int i = 0; i < ids.size(); i++) {
