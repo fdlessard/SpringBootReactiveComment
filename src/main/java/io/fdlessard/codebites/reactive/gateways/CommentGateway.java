@@ -52,7 +52,7 @@ public class CommentGateway {
                         .onStatus(HttpStatus::isError, this::handleError)
                         .bodyToMono(Comment.class)
                         .flatMap(c -> buildResponse(id, c))
-                        .onErrorResume(e -> buildResponse(id, e))
+                        .onErrorResume(e -> buildResponse(id, e)),
                         256)
                 .block();
     }
