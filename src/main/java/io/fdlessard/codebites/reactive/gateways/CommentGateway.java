@@ -13,7 +13,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 import static io.fdlessard.codebites.reactive.configurations.ReactiveConfiguration.buildIds;
 
@@ -54,6 +53,7 @@ public class CommentGateway {
                         .flatMap(c -> buildResponse(id, c))
                         .onErrorResume(e -> buildResponse(id, e)),
                         256)
+                .collectList()
                 .block();
     }
 
