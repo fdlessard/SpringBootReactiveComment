@@ -3,16 +3,17 @@ package io.fdlessard.codebites.reactive.gateways;
 import io.fdlessard.codebites.reactive.domain.Comment;
 import io.fdlessard.codebites.reactive.domain.ErrorResponse;
 import io.fdlessard.codebites.reactive.domain.Response;
-import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.fdlessard.codebites.reactive.configurations.ReactiveConfiguration.buildIds;
 
@@ -48,20 +49,24 @@ public class CommentGateway {
                         .uri("/{id}", id)
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
-                        .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new GatewayException()))
-                        .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new GatewayException()))
+                        .onStatus(HttpStatus::isError, this::handleError)
                         .bodyToMono(Comment.class)
-                        .flatMap(c -> buildResponse(c))
-                        .onErrorResume(e -> buildResponse(e)), 256)
-                .collectList().block();
+                        .flatMap(c -> buildResponse(id, c))
+                        .onErrorResume(e -> buildResponse(id, e))
+                        256)
+                .block();
     }
 
-    private Mono<Response<Comment, ErrorResponse>> buildResponse(Comment comment) {
+    private Mono<Response<Comment, ErrorResponse>> buildResponse(String id, Comment comment) {
         return Mono.just(new Response<Comment, ErrorResponse>(HttpStatus.OK, comment, null));
     }
 
-    private Mono<Response<Comment, ErrorResponse>> buildResponse(Throwable e) {
+    private Mono<Response<Comment, ErrorResponse>> buildResponse(String id, Throwable e) {
         return Mono.just(new Response<Comment, ErrorResponse>(HttpStatus.BAD_REQUEST, null, new ErrorResponse()));
+    }
+
+    private Mono<GatewayException> handleError(ClientResponse clientResponse) {
+        return Mono.error(new GatewayException());
     }
 
 }

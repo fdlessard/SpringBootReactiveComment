@@ -8,7 +8,6 @@ public class GatewayException extends Exception{
         super();
     }
 
-
     public GatewayException(String message, int status) {
         super(message);
         this.status = status;
