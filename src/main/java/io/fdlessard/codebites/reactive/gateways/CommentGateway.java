@@ -11,8 +11,11 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.fdlessard.codebites.reactive.configurations.ReactiveConfiguration.buildIds;
 
@@ -38,10 +41,10 @@ public class CommentGateway {
                 .block();
     }
 
-    public List<Response<Comment, ErrorResponse>> getAllComments() {
+    public Map<String, Response<Comment, ErrorResponse>> getAllComments() {
 
         List<String> ids = buildIds();
-        ids.add(10, "toto");
+        //ids.add(10, "toto");
 
         return Flux.fromIterable(ids)
                 .flatMap(id -> webClient.get()
@@ -53,16 +56,16 @@ public class CommentGateway {
                         .flatMap(c -> buildResponse(id, c))
                         .onErrorResume(e -> buildResponse(id, e)),
                         256)
-                .collectList()
+                .collectMap(id -> id.getT1(), id -> id.getT2())
                 .block();
     }
 
-    private Mono<Response<Comment, ErrorResponse>> buildResponse(String id, Comment comment) {
-        return Mono.just(new Response<Comment, ErrorResponse>(HttpStatus.OK, comment, null));
+    private Mono< Tuple2<String, Response<Comment, ErrorResponse>>> buildResponse(String id, Comment comment) {
+        return Mono.just(Tuples.of(id, new  Response(HttpStatus.OK, comment, null)));
     }
 
-    private Mono<Response<Comment, ErrorResponse>> buildResponse(String id, Throwable e) {
-        return Mono.just(new Response<Comment, ErrorResponse>(HttpStatus.BAD_REQUEST, null, new ErrorResponse()));
+    private Mono< Tuple2<String, Response<Comment, ErrorResponse>>> buildResponse(String id, Throwable e) {
+        return Mono.just(Tuples.of(id, new  Response(HttpStatus.BAD_REQUEST, null, new ErrorResponse())));
     }
 
     private Mono<GatewayException> handleError(ClientResponse clientResponse) {

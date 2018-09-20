@@ -12,6 +12,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,7 +32,10 @@ public class WebFluxCommentController {
 
     @GetMapping("/webflux/comments")
     public List<Response<Comment, ErrorResponse>> getAllComments() {
-        return commentGateway.getAllComments();
+
+        Map<String, Response<Comment, ErrorResponse>> map = commentGateway.getAllComments();
+
+        return map.values().stream().collect(Collectors.toList());
     }
 }
 
