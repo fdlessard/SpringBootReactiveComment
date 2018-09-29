@@ -1,6 +1,5 @@
 package io.fdlessard.codebites.reactive.configurations;
 
-import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,9 @@ import static java.util.stream.Collectors.toList;
 @Configuration
 public class ReactiveConfiguration {
 
-    public static final String COMMENT_BASE_URL = "http://jsonplaceholder.typicode.com/comments";
+    // public static final String COMMENT_BASE_URL = "http://jsonplaceholder.typicode.com/comments";
+    public static final String COMMENT_BASE_URL = "http://127.0.0.1:8091/comments";
+
     public static final int MAX_COMMENT = 500;
 
     @Autowired
@@ -62,9 +63,10 @@ public class ReactiveConfiguration {
         };
     }
 
+
     public static List<String> buildIds() {
 
-        return IntStream.range(1,MAX_COMMENT).boxed()
+        return IntStream.range(1, MAX_COMMENT).boxed()
                 .map(Objects::toString)
                 .collect(toList());
     }

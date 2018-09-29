@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/comments/6"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "postId": 1,
+      "id": 6,
+      "name": "vero eaque aliquid doloribus et culpa",
+      "email": "Hayden@althea.biz",
+      "body": "harum non quasi et ratione tempore iure ex voluptates in ratione harum architecto fugit inventore cupiditate voluptates magni quo et"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

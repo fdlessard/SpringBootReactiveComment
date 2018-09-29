@@ -2,17 +2,17 @@ package io.fdlessard.codebites.reactive.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import java.awt.*;
 import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class Response<T, E> implements Serializable {
+@NoArgsConstructor
+public class Response<T> implements Serializable {
 
     private HttpStatus status;
     private T data;
-    private E error;
-
+    private ErrorResponse error;
 }
