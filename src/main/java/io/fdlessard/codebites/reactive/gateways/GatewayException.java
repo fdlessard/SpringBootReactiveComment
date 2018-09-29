@@ -1,24 +1,20 @@
 package io.fdlessard.codebites.reactive.gateways;
 
 import lombok.Getter;
-import reactor.core.publisher.Mono;
 
 @Getter
-public class GatewayException2 extends RuntimeException{
+public class GatewayException extends RuntimeException {
 
     private int status;
 
-    public GatewayException2() {
+    public GatewayException() {
         super();
     }
 
 
-    public GatewayException2(String message, int status) {
+    public GatewayException(String message, int status) {
         super(message);
         this.status = status;
     }
 
-    public GatewayException2(Throwable throwable) {
-        super(throwable);
-    }
 }

@@ -23,8 +23,6 @@ import java.util.Map;
 @Service
 public class CommentGateway {
 
-    // https://www.callicoder.com/spring-5-reactive-webclient-webtestclient-examples/
-
     private WebClient webClient;
 
     public CommentGateway(WebClient webClient) {
@@ -40,14 +38,6 @@ public class CommentGateway {
                 .bodyToMono(Comment.class)
                 .doOnError(WebClientResponseException.class, e -> handleError(e))
                 .block();
-
-    }
-
-
-    private void handleError(WebClientResponseException e) {
-
-        throw new GatewayException2(e.getResponseBodyAsString(), e.getRawStatusCode());
-
     }
 
     public Map<String, Response<Comment>> getAllComments() {
@@ -83,5 +73,10 @@ public class CommentGateway {
         }
 
         return Mono.just(Tuples.of(id, new Response(HttpStatus.BAD_REQUEST, null, new ErrorResponse())));
+    }
+
+    private void handleError(WebClientResponseException e) {
+
+        throw new GatewayException(e.getResponseBodyAsString(), e.getRawStatusCode());
     }
 }

@@ -3,7 +3,7 @@ package io.fdlessard.codebites.reactive.controllers;
 import io.fdlessard.codebites.reactive.domain.Comment;
 import io.fdlessard.codebites.reactive.domain.Response;
 import io.fdlessard.codebites.reactive.gateways.CommentGateway;
-import io.fdlessard.codebites.reactive.gateways.GatewayException2;
+import io.fdlessard.codebites.reactive.gateways.GatewayException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,8 +38,8 @@ public class WebFluxCommentController {
         return map.values().stream().collect(Collectors.toList());
     }
 
-    @ExceptionHandler(GatewayException2.class)
-    public ResponseEntity<String> handleWebClientResponseException(GatewayException2 ex) {
+    @ExceptionHandler(GatewayException.class)
+    public ResponseEntity<String> handleWebClientResponseException(GatewayException ex) {
         return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
     }
 }
